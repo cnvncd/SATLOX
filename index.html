@@ -15,15 +15,16 @@
             min-height: 100vh;
             background: #0a0e27;
             font-family: 'Arial', sans-serif;
-            overflow: hidden;
+            overflow-x: hidden;
         }
         
         h1 {
             font-size: 4rem;
             color: #00ff41;
             text-shadow: 0 0 20px rgba(0, 255, 65, 0.8);
-            margin-bottom: 50px;
+            margin-bottom: 30px;
             letter-spacing: 10px;
+            text-align: center;
         }
         
         .ecg-container {
@@ -32,6 +33,7 @@
             height: 200px;
             position: relative;
             overflow: hidden;
+            margin-bottom: 50px;
         }
         
         .ecg-line {
@@ -73,6 +75,54 @@
                 linear-gradient(rgba(0, 255, 65, 0.1) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 255, 65, 0.1) 1px, transparent 1px);
             background-size: 20px 20px;
+        }
+
+        .message {
+            max-width: 800px;
+            padding: 30px;
+            background: rgba(0, 255, 65, 0.05);
+            border: 2px solid #00ff41;
+            border-radius: 10px;
+            margin: 20px;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+        }
+
+        .message h2 {
+            color: #00ff41;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.8);
+        }
+
+        .message p {
+            color: #00ff41;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .signature {
+            color: #00ff41;
+            font-size: 1rem;
+            text-align: right;
+            margin-top: 30px;
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+                letter-spacing: 5px;
+            }
+            .message h2 {
+                font-size: 1.5rem;
+            }
+            .message p {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -144,5 +194,57 @@
             </svg>
         </div>
     </div>
+
+    <div class="message">
+        <h2>Уважаемая компания "Стройпульс"!</h2>
+        <p>
+            Этот домен <strong>kireshe.xyz</strong> принадлежит мне и никогда не был связан с вашей компанией.
+        </p>
+        <p>
+            Если ранее на этом домене отображался ваш сайт, это означает, что вы использовали чужой домен без разрешения владельца.
+        </p>
+        <p>
+            Пожалуйста, проверьте настройки DNS вашего сайта и используйте только те домены, которые принадлежат вашей компании.
+        </p>
+        <p class="signature">
+            С уважением,<br>
+            Владелец домена kireshe.xyz
+        </p>
+    </div>
+
+    <script>
+        // Генерация звука кардиограммы
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        let isPlaying = false;
+
+        function playBeep() {
+            if (!isPlaying) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.1);
+            
+            setTimeout(playBeep, 1000);
+        }
+
+        // Запуск звука при клике (требование браузеров)
+        document.body.addEventListener('click', function() {
+            if (!isPlaying) {
+                isPlaying = true;
+                playBeep();
+            }
+        }, { once: true });
+    </script>
 </body>
 </html>
